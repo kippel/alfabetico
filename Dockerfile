@@ -1,18 +1,12 @@
-FROM python:3.10-alpine
+FROM python:3.8
+ENV PYTHONUNBUFFERED=1
 
-ENV PYTHONUNBUFFERED 1
+WORKDIR /code
 
-COPY ./requirements.txt /requirements.txt
-COPY ./app /app
+COPY requirements.txt /code/
 
-WORKDIR /app
-EXPOSE 8000
+RUN python -m pip install --upgrade pip
+RUN python -m pip install -r requirements.txt
 
-RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip && \
-    /py/bin/pip install -r /requirements.txt && \
-    adduser --disabled-password --no-create-home app
+COPY . /code/
 
-ENV PATH="/py/bin:$PATH"
-
-USER app
